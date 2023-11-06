@@ -19,7 +19,6 @@ color_converted = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
 
 face_locations = face_recognition.face_locations(color_converted)
 face_encodings = face_recognition.face_encodings(color_converted, face_locations)
-# face_landmarks_list = face_recognition.face_landmarks(color_converted)
 
 for (top, right, bottom, left) in face_locations:
 
