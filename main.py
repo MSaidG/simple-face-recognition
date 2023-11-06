@@ -12,28 +12,63 @@ if (deepface_output['verified']):
 else:
     print('Not same face')
 
+face_objs = DeepFace.extract_faces(img_path = "faces_1.jpg", detector_backend="retinaface")
+
+print(len(face_objs))
+keys = list(face_objs[0].keys())
+print(keys)
+print(type(face_objs[0]))
+first_face = face_objs[0].get('face')
+
+faces = []
+num = 1
+for face in face_objs:
+
+
+    extracted_face = face.get('face')
+    converted_face = cv2.cvtColor(extracted_face , cv2.COLOR_BGR2RGB)
+    faces.append(converted_face)
+    cv2.imwrite("face_" + str(num) + ".jpg", 255 * converted_face)
+
+    deepface_output = DeepFace.verify("face_1.jpg", 
+        "face_" + str(num) + ".jpg", detector_backend="retinaface", enforce_detection= False)
+    
+    if (deepface_output['verified']):
+        print(str(num) + ' Same face')
+    else:
+        print(str(num) + ' Not same face')
+    
+    num += 1
+
+
+horizantally = np.concatenate(faces, axis=1)
+cv2.imshow("faces", horizantally)
+
+# im = cv2.cvtColor(face_objs[0].get('face') , cv2.COLOR_BGR2RGB)
+# cv2.imshow("faces", im)
+cv2.waitKey()
 
 # Face recognition
-opencv_image = cv2.imread('faces.png')
-color_converted = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
+# opencv_image = cv2.imread('faces_1.jpg')
+# color_converted = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
 
-face_locations = face_recognition.face_locations(color_converted)
-face_encodings = face_recognition.face_encodings(color_converted, face_locations)
+# face_locations = face_recognition.face_locations(color_converted)
+# face_encodings = face_recognition.face_encodings(color_converted, face_locations)
 
-for (top, right, bottom, left) in face_locations:
+# for (top, right, bottom, left) in face_locations:
 
-    # Draw a box around the face
-    cv2.rectangle(opencv_image, (left, top), (right, bottom), (0, 255, 255), 1)
+#     # Draw a box around the face
+#     cv2.rectangle(opencv_image, (left, top), (right, bottom), (0, 255, 255), 1)
 
-    # Draw a label with a name below the face
-    cv2.rectangle(opencv_image, (left, bottom - 35), (right, bottom), (0, 255, 255), cv2.FILLED)
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(opencv_image, 'unknown', (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+#     # Draw a label with a name below the face
+#     cv2.rectangle(opencv_image, (left, bottom - 35), (right, bottom), (0, 255, 255), cv2.FILLED)
+#     font = cv2.FONT_HERSHEY_SIMPLEX
+#     cv2.putText(opencv_image, 'unknown', (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
-opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_RGB2BGR)
-cv2.imshow('faces', opencv_image)
+# opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_RGB2BGR)
+# cv2.imshow('faces', opencv_image)
 
-cv2.waitKey()
+# cv2.waitKey()
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------
 
