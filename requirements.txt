@@ -1,0 +1,6 @@
+face-recognition
+opencv-python
+numpy
+Pillow
+ipython
+deepface
