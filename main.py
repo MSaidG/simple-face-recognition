@@ -8,17 +8,31 @@ from deepface import DeepFace
 # Deepface check same or not
 deepface_output = DeepFace.verify('keanu_1.jpg', 'keanu_2.jpg')
 if (deepface_output['verified']):
-    print('Same face')
+    print("keanu_1.jpg - keanu_2.jpg" + ' Same face')
 else:
-    print('Not same face')
+    print("keanu_1.jpg - keanu_2.jpg" + ' Not same face')
+
+deepface_output = DeepFace.verify('keanu_1.jpg', 'keanu_3.jpg')
+if (deepface_output['verified']):
+    print("keanu_1.jpg - keanu_3.jpg" + ' Same face')
+else:
+    print("keanu_1.jpg - keanu_3.jpg" + ' Not same face')
+
+deepface_output = DeepFace.verify('keanu_2.jpg', 'keanu_3.jpg')
+if (deepface_output['verified']):
+    print("keanu_2.jpg - keanu_3.jpg" + ' Same face')
+else:
+    print("keanu_2.jpg - keanu_3.jpg" + ' Not same face')
+
 
 face_objs = DeepFace.extract_faces(img_path = "faces_1.jpg", detector_backend="retinaface")
+face_objs_mike = DeepFace.extract_faces(img_path = "mike_face.jpg", detector_backend="retinaface")
 
-print(len(face_objs))
-keys = list(face_objs[0].keys())
-print(keys)
-print(type(face_objs[0]))
-first_face = face_objs[0].get('face')
+# print(len(face_objs))
+# keys = list(face_objs[0].keys())
+# print(keys)
+# print(type(face_objs[0]))
+# first_face = face_objs[0].get('face')
 
 faces = []
 num = 1
@@ -34,11 +48,56 @@ for face in face_objs:
         "face_" + str(num) + ".jpg", detector_backend="retinaface", enforce_detection= False)
     
     if (deepface_output['verified']):
-        print(str(num) + ' Same face')
+        print("face_1.jpg - face_" + str(num) + ".jpg" + ' Same face')
     else:
-        print(str(num) + ' Not same face')
+        print("face_1.jpg - face_" + str(num) + ".jpg" + ' Not same face')
     
     num += 1
+
+num = 1
+for face in face_objs_mike:
+
+    extracted_face = face.get('face')
+    converted_face = cv2.cvtColor(extracted_face , cv2.COLOR_BGR2RGB)
+    faces.append(converted_face)
+    cv2.imwrite("mike_" + str(num) + ".jpg", 255 * converted_face)
+
+    deepface_output = DeepFace.verify("mike_1.jpg", 
+        "mike_" + str(num) + ".jpg", detector_backend="retinaface", enforce_detection= False)
+    
+    if (deepface_output['verified']):
+        print("mike_1.jpg - mike_" + str(num) + ".jpg" + ' Same face')
+    else:
+        print("mike_1.jpg - mike_" + str(num) + ".jpg" + ' Not same face')
+    
+    num += 1
+
+
+deepface_output = DeepFace.verify("face_1.jpg", 
+    "keanu_1.jpg", detector_backend="retinaface", enforce_detection= False)
+
+if (deepface_output['verified']):
+    print("face_1.jpg - keanu_1.jpg" + ' Same face')
+else:
+    print("face_1.jpg - keanu_1.jpg" + ' Not same face')
+
+
+deepface_output = DeepFace.verify("mike_1.jpg", 
+    "keanu_1.jpg", detector_backend="retinaface", enforce_detection= False)
+
+if (deepface_output['verified']):
+    print("mike_1.jpg - keanu_1.jpg" + ' Same face')
+else:
+    print("mike_1.jpg - keanu_1.jpg" + ' Not same face')
+
+    
+deepface_output = DeepFace.verify("face_1.jpg", 
+    "mike_1.jpg", detector_backend="retinaface", enforce_detection= False)
+
+if (deepface_output['verified']):
+    print("face_1.jpg - mike_1.jpg" + ' Same face')
+else:
+    print("face_1.jpg - mike_1.jpg" + ' Not same face')
 
 
 horizantally = np.concatenate(faces, axis=1)
